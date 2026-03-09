@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react"
-import axios from 'axios'
-import MovieCard from "../components/MovieCard"
-import "../css/Home.css"
 import { GetMovies } from "../services/api"
+import "../css/Home.css"
+import MovieCard from "../components/MovieCard"
+import Loader from "../components/Loader"
 
 export default function Home(){
     const [searchQuery, setSearchQuery] = useState('');
@@ -27,12 +27,14 @@ export default function Home(){
         loadMovies()
     },[])
 
-    console.log(movies);
-
     const handleSearch = (e) =>{
         e.preventDefault()
-        alert(searchQuery)
     }
+
+    const filteredMovies = movies.filter(movie => movie.title.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    if (loading) return <Loader/>;
+    if (error) return <p>{error}</p>;
     
     return (
         <div className="home">
@@ -40,9 +42,10 @@ export default function Home(){
                 <input className="search-input" type="text" placeholder="Search Movie" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}/>
                 <button className="search-button" type="submit">Search</button>
             </form>
-            <div className="movies-grid">
-                {movies.map((movie) => (<MovieCard movie={movie} key={movie.id} />))}
-            </div>
+                {error && <div className="error-message">{error}</div>}
+                {loading ? <Loader/> : <div className="movies-grid">
+                {filteredMovies.map((movie) => (<MovieCard movie={movie} key={movie.id} />))}
+            </div>}
         </div>
     )
 }
