@@ -5,6 +5,10 @@
   transition: transform 0.2s;
   display: flex;
   flex-direction: column;
+
+  max-width: 340px;
+  width: 100%;
+  flex: 0 0 auto;
 }
 
 .movie-card:hover {
